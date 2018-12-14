@@ -1,52 +1,61 @@
 version: '1'
 
-# emails to receive notifications on
-notify_emails:
-  - email@example.com
+# Whether to receive email notifications or not
+notify_email: True
+
+# the name of the design
+design_name: mydesign
 
 # put your design source file(s) in the design folder
-# write down add design file names to be synthesized
+# then, put write down a list of all input rtl files below
 design_files: 
-  - my_design_1.v
-  - my_design_2.v
-  - my_design_3.v
+  - mydesign.v
+
+# name of top verilog modules
+top_level_module: mydesign
+
+# the clock defnition
+clock: 1000000
 
 # available libraries on https://flow.theopenroadproject.org
-# select from the below options
-# [14nm.genlib, 16nm.genlib, 22nm.genlib]
-library: 16nm.lib
+# select from [osu035.lib]
+library: osu035.lib
 
+# constrains file
+sdc_file: mydesign.sdc
+
+# flow definition
 flow:
-  - ls
-  - fp
-  - pl
-  - cts
-  - rt
+  - logic_synthesis
+  - floor_planning
+  - placement
+  - clock_tree_synthesis
+  - routing
 
 # customize your flow using the parameters below
 stages:
-  ls:
+  logic_synthesis:
     tool: yosys
     params:
       - p1: false
       - p2: 12
-  fp:
-    tool: sim
+  floor_planning:
+    tool: tw
     params:
       - p1: false
       - p2: 'default'
-  pl:
+  placement:
     tool: replace
     params:
       - p1: true
       - p2: 'default'
-  cts:
-    tool: sim
+  clock_tree_synthesis:
+    tool: tw
     params:
       - p1: false
       - p2: true
-  rt:
-    tool: sim
+  routing:
+    tool: tw
     params:
       - p1: 'default'
       - p2: 'default'
